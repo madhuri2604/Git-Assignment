@@ -46,7 +46,7 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: Modules/resource/config
+      working-directory: Modules/gcs/config
 
     - name: Terraform Plan
       run: terraform plan -out=tfplan
