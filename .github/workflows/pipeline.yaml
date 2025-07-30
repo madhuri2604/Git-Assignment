@@ -1,7 +1,7 @@
 name: GCP WIF + Terraform GCS Pipeline
 env:
   RESOURCE_NAME: "gcs"
-  REGION:  "<REGION>"
+  REGION:  "usc1"
   TERRAFORM_VERSION: "1.8.5"   
 on:
   push:
