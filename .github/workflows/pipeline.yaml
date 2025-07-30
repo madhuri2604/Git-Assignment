@@ -19,16 +19,6 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Dump GitHub OIDC Token
-      run: |
-        curl -sLS -X POST \
-          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://iam.googleapis.com" \
-          | jq
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
-
     - name: Authenticate to GCP via WIF
       id: auth
       uses: google-github-actions/auth@v2
