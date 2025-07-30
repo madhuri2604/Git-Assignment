@@ -36,8 +36,8 @@ jobs:
     #   with:
     #     project_id: ${{ env.PROJECT_ID }}
 
-    - name: List all GCS buckets
-      run: gcloud storage buckets list --project $PROJECT_ID
+    # - name: List all GCS buckets
+    #   run: gcloud storage buckets list --project $PROJECT_ID
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
