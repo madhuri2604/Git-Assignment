@@ -1,5 +1,8 @@
 name: GCP WIF + Terraform GCS Pipeline
-
+env:
+  RESOURCE_NAME: "gcs"
+  REGION:  "<REGION>"
+  TERRAFORM_VERSION: "1.8.5"   
 on:
   push:
     branches: [main]
@@ -42,16 +45,31 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 1.8.5
+        terraform_version:  ${{TERRAFORM_VERSION}}
 
-    - name: Terraform Init
-      run: terraform init
-      working-directory: Modules/gcs/config
+    # - name: Terraform Init
+    #   run: terraform init
+    #   working-directory: Modules/gcs/config
 
-    - name: Terraform Plan
-      run: terraform plan -out=tfplan
-      working-directory: Modules/gcs/config
+    # - name: Terraform Plan
+    #   run: terraform plan -out=tfplan
+    #   working-directory: Modules/gcs/config
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
-      working-directory: Modules/gcs/config
+    # - name: Terraform Apply
+    #   run: terraform apply -auto-approve tfplan
+    #   working-directory: Modules/gcs/config
+
+    - name: Run Terraform Deployment
+      run: |
+        TF_DIR="Modules/${{ env.RESOURCE_NAME }}/config"
+        echo "Navigating to Terraform directory: $TF_DIR"
+        cd "$TF_DIR"
+
+        echo "Running terraform init..."
+        terraform init -backend-config="./backend/${{REGION}}/backend.auto.tfvars"
+
+        echo "Running terraform plan..."
+        terraform plan -var-file=../${{ env.REGION }}/terraform.tfvars
+
+        echo "Running terraform apply..."
+        terraform apply -auto-approve -var-file=../${{ env.REGION }}/${{ env.RESOURCE_NAME }}.tfvars

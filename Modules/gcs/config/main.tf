@@ -8,7 +8,7 @@ terraform {
 }
 
 resource "google_storage_bucket" "default" {
-  name     = "gcs-bucket-github-demo"
+  name     = var.bucket_name
   location = "us-central1"
   force_destroy = true
 }
