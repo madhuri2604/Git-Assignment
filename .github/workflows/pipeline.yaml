@@ -50,6 +50,8 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan -out=tfplan
+      working-directory: Modules/gcs/config
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
+      working-directory: Modules/gcs/config
