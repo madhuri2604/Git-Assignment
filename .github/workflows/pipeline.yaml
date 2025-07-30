@@ -30,46 +30,22 @@ jobs:
         workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
         service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
 
-    # - name: Set GOOGLE_APPLICATION_CREDENTIALS env
-    #   run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file_path }}" >> $GITHUB_ENV
-
-
-    # - name: Setup gcloud
-    #   uses: google-github-actions/setup-gcloud@v2
-    #   with:
-    #     project_id: ${{ env.PROJECT_ID }}
-
-    # - name: List all GCS buckets
-    #   run: gcloud storage buckets list --project $PROJECT_ID
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version:  ${{TERRAFORM_VERSION}}
 
-    # - name: Terraform Init
-    #   run: terraform init
-    #   working-directory: Modules/gcs/config
-
-    # - name: Terraform Plan
-    #   run: terraform plan -out=tfplan
-    #   working-directory: Modules/gcs/config
-
-    # - name: Terraform Apply
-    #   run: terraform apply -auto-approve tfplan
-    #   working-directory: Modules/gcs/config
-
-    - name: Run Terraform Deployment
+    - name: Terraform Init
       run: |
-        TF_DIR="Modules/${{ env.RESOURCE_NAME }}/config"
-        echo "Navigating to Terraform directory: $TF_DIR"
-        cd "$TF_DIR"
+        terraform init -backend-config=${{ github.workspace }}/Modules/${RESOURCE}/config/backend/${REGION}/backend.auto.tfvars
+      working-directory: Modules/${{ env.RESOURCE }}/config
 
-        echo "Running terraform init..."
-        terraform init -backend-config="./backend/${{REGION}}/backend.auto.tfvars"
+    - name: Terraform Plan
+      run: |
+        terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE}/${REGION}/terraform.tfvars -out=tfplan
+      working-directory: Modules/${{ env.RESOURCE }}/config
 
-        echo "Running terraform plan..."
-        terraform plan -var-file=../${{ env.REGION }}/terraform.tfvars
-
-        echo "Running terraform apply..."
-        terraform apply -auto-approve -var-file=../${{ env.REGION }}/${{ env.RESOURCE_NAME }}.tfvars
+    - name: Terraform Apply
+      run: |
+        terraform apply -auto-approve tfplan
+      working-directory: Modules/${{ env.RESOURCE }}/config
