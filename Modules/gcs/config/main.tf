@@ -13,7 +13,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "default" {
-  name     = "gcs-bucket-github-demo"
+  name     = "gcs-bucket-github-demo1"
   location = "us-central1"
   force_destroy = true
 }
