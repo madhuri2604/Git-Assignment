@@ -19,13 +19,23 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
+    - name: Dump GitHub OIDC Token
+      run: |
+        curl -sLS -X POST \
+          -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://iam.googleapis.com" \
+          | jq
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+
     - name: Authenticate to GCP via WIF
       id: auth
       uses: google-github-actions/auth@v2
       with:
         token_format: access_token
         workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
-        service_account: "sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com"
+        service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
 
     - name: Setup gcloud
       uses: google-github-actions/setup-gcloud@v2
