@@ -1,0 +1,50 @@
+name: GCP WIF + Terraform GCS Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  gcs-bucket-workflow:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      PROJECT_ID: "prj-gcp-inframod-01" 
+      TF_VAR_project_id: "prj-gcp-inframod-01"
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Authenticate to GCP via WIF
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        token_format: access_token
+        workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
+        service_account: "sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com"
+
+    - name: Setup gcloud
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+
+    - name: List all GCS buckets
+      run: gcloud storage buckets list --project $PROJECT_ID
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.8.5
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
