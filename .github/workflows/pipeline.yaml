@@ -41,8 +41,11 @@ jobs:
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
 
-    - name: Run gcloud command to list buckets
-      run: gcloud storage buckets list --project=${{ env.PROJECT_ID }}
+    - name: debug gcloud auth
+      run: gcloud auth login
+
+    # - name: Run gcloud command to list buckets
+    #   run: gcloud storage buckets list --project=${{ env.PROJECT_ID }}
 
     # - name: Setup Terraform
     #   uses: hashicorp/setup-terraform@v3
