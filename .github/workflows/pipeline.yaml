@@ -52,6 +52,13 @@ jobs:
         terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE_NAME}/${REGION}/terraform.tfvars -out=tfplan
       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
 
+    - name: Debug - Check Identity
+      run: |
+        gcloud auth list
+        gcloud config list account
+        gcloud auth print-identity-token
+
+
     - name: Terraform Apply
       run: |
         terraform apply -auto-approve tfplan
