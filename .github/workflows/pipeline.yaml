@@ -33,6 +33,9 @@ jobs:
     - name: Export creds path
       run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file_path }}" >> $GITHUB_ENV
 
+    - name: Set GOOGLE_IMPERSONATE_SERVICE_ACCOUNT
+      run: echo "GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=ado-test-sa@prj-gcp-inframod-01.iam.gserviceaccount.com" >> $GITHUB_ENV
+
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
