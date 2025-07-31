@@ -41,8 +41,12 @@ jobs:
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
 
-    - name: debug gcloud auth
-      run: gcloud auth list
+    - name: Verify impersonated identity
+      run: gcloud config list account
+
+    - name: List available services
+      run: gcloud services list --limit=5
+
 
     # - name: Run gcloud command to list buckets
     #   run: gcloud storage buckets list --project=${{ env.PROJECT_ID }}
