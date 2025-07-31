@@ -42,7 +42,7 @@ jobs:
       run: 'gcloud info'
 
     - name: debug gcloud auth
-      run: gcloud auth login
+      run: gcloud auth list
 
     # - name: Run gcloud command to list buckets
     #   run: gcloud storage buckets list --project=${{ env.PROJECT_ID }}
