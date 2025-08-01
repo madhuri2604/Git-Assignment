@@ -7,7 +7,7 @@ on:
 jobs:
 
   auth:
-    uses: ./.github/workflows/auth-reusable.yaml
+    uses: ./.github/workflows/auth.yaml
     with:
       workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
       service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
@@ -15,7 +15,7 @@ jobs:
 
   terraform:
     needs: auth
-    uses: ./.github/workflows/terraform-reusable.yaml
+    uses: ./.github/workflows/terraform.yaml
     with:
       resource_name: 'gcs'
       region: 'usc1'
