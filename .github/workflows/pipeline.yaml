@@ -55,7 +55,12 @@ jobs:
         terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE_NAME}/${REGION}/terraform.tfvars -out=tfplan
       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
 
-    - name: Terraform Apply
+    # - name: Terraform Apply
+    #   run: |
+    #     terraform apply -auto-approve tfplan
+    #   working-directory: Modules/${{ env.RESOURCE_NAME }}/config
+
+    - name: Terraform Destroy
       run: |
-        terraform apply -auto-approve tfplan
+        terraform destroy -auto-approve tfplan
       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
