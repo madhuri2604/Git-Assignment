@@ -4,12 +4,8 @@ on:
   push:
     branches: [main]
 
-env:
-  RESOURCE_NAME: "gcs"
-  REGION: "usc1"
-  TERRAFORM_VERSION: "1.8.5"
-
 jobs:
+
   auth:
     uses: ./.github/workflows/auth-reusable.yaml
     with:
@@ -21,6 +17,6 @@ jobs:
     needs: auth
     uses: ./.github/workflows/terraform-reusable.yaml
     with:
-      resource_name: ${{ env.RESOURCE_NAME }}
-      region: ${{ env.REGION }}
-      terraform_version: ${{ env.TERRAFORM_VERSION }}
+      resource_name: 'gcs'
+      region: 'usc1'
+      terraform_version: '1.8.5'
