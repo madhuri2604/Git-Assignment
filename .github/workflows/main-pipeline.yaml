@@ -23,5 +23,6 @@ jobs:
       resource_name: 'gcs'
       region: 'usc1'
       terraform_version: '1.8.5'
+      credentials_file_path: ${{ needs.auth.outputs.credentials_file_path }}
     secrets: inherit
 

@@ -13,6 +13,9 @@ on:
         required: false
         default: "1.8.5"
         type: string
+      credentials_file_path:
+        required: true
+        type: string
 
 jobs:
   terraform:
@@ -26,6 +29,9 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ inputs.credentials_file_path }}" >> $GITHUB_ENV
 
       - name: Terraform Init
         run: |
