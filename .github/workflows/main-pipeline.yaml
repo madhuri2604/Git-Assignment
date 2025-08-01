@@ -24,6 +24,4 @@ jobs:
       region: 'usc1'
       terraform_version: '1.8.5'
     secrets: inherit
-    steps:
-      - name: Set creds path for Terraform job (workaround)
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ needs.call-auth.outputs.credentials_file_path }}" >> $GITHUB_ENV  
+
