@@ -29,15 +29,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ inputs.terraform_version }}
-
-      - name: Write GCP credentials to file
+          
+      - name: Decode credentials
         run: |
           echo "${{ inputs.credentials_json_b64 }}" | tr -d '\n' | base64 -d > "$HOME/adc.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/adc.json" >> $GITHUB_ENV
 
-      - name: Verify Credentials JSON
-        run: |
-          cat $HOME/adc.json | jq .
+      - name: Verify credentials
+        run: cat $HOME/adc.json | jq .
 
       - name: Terraform Init
         run: |

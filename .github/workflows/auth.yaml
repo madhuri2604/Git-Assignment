@@ -13,16 +13,16 @@ on:
         required: true
         type: string
     outputs:
-      credentials_json_b64:
-        description: 'Base64 encoded GCP credentials JSON'
-        value: ${{ jobs.auth.outputs.credentials_json_b64 }}
+      credentials_file_path:
+        description: 'Path to the generated GCP credentials file'
+        value: ${{ jobs.auth.outputs.credentials_file_path }}
 
 jobs:
   auth:
     runs-on: ubuntu-latest
 
     outputs:
-      credentials_json_b64: ${{ steps.auth.outputs.credentials_json_b64 }}
+      credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}
 
     steps:
 
