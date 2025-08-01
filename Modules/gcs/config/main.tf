@@ -18,5 +18,5 @@ terraform {
 resource "google_folder" "folders" {
   display_name        = "wif-test-folder"
   parent              = "folders/815968443088"
-  deletion_protection = false
+#   deletion_protection = false
 }
