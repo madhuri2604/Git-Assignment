@@ -13,7 +13,7 @@ on:
         required: false
         default: "1.8.5"
         type: string
-      credentials_file_path:
+      credentials_json_b64:
         required: true
         type: string
 
@@ -30,9 +30,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Set GOOGLE_APPLICATION_CREDENTIALS
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ inputs.credentials_file_path }}" >> $GITHUB_ENV
-
+      - name: Write GCP credentials to file
+        run: |
+          echo "${{ inputs.credentials_json_b64 }}" | base64 -d > "$HOME/adc.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/adc.json" >> $GITHUB_ENV
+          
       - name: Terraform Init
         run: |
           terraform init -backend-config=${{ github.workspace }}/Modules/${{ inputs.resource_name }}/config/backend/${{ inputs.region }}/backend.auto.tfvars
