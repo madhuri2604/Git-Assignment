@@ -27,10 +27,10 @@ jobs:
       uses: google-github-actions/auth@v2
       with:
         create_credentials_file : true
-        workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
-        # workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/access-dev-infra-pool01/providers/oidc-github-provider01'
-        service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com' 
-        # service_account: 'gcp-dev-svc-wif-access01@prj-gcp-inframod-01.iam.gserviceaccount.com'
+        # workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
+        workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/access-dev-infra-pool01/providers/oidc-github-provider01'
+        # service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com' 
+        service_account: 'gcp-dev-svc-wif-access01@prj-gcp-inframod-01.iam.gserviceaccount.com'
 
     - name: Setup gcloud
       uses: google-github-actions/setup-gcloud@v2
