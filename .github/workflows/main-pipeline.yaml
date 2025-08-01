@@ -7,7 +7,7 @@ on:
 jobs:
 
   auth:
-    uses: ./.github/workflows/auth.yaml@main
+    uses: ./.github/workflows/auth.yaml
     permissions:
       id-token: write
       contents: read
@@ -18,7 +18,7 @@ jobs:
 
   terraform:
     needs: auth
-    uses: ./.github/workflows/terraform.yaml@main
+    uses: ./.github/workflows/terraform.yaml
     with:
       resource_name: 'gcs'
       region: 'usc1'
