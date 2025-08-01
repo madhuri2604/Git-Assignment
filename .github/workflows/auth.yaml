@@ -35,4 +35,4 @@ jobs:
           service_account: ${{ inputs.service_account }}
 
       - name: Export credentials path
-          run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file_path }}" >> $GITHUB_ENV
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=${{ steps.auth.outputs.credentials_file_path }}" >> $GITHUB_ENV
