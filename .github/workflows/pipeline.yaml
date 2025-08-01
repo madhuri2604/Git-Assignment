@@ -62,5 +62,5 @@ jobs:
 
     - name: Terraform Destroy
       run: |
-        terraform destroy -auto-approve tfplan
+        terraform destroy -auto-approve 
       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
