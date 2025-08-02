@@ -28,8 +28,8 @@ jobs:
         workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
         service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com' 
 
-    - name: Debug output
-      run: echo "Credentials file path: ${{ steps.auth.outputs.credentials_file_path }}"
+    # - name: Debug output
+    #   run: echo "Credentials file path: ${{ steps.auth.outputs.credentials_file_path }}"
 
     - name: Base64 encode the credentials file
       id: encode-creds
@@ -43,7 +43,7 @@ jobs:
     - env:
         OUTPUT1: $
       run echo "$OUTPUT1"
-      
+
     - name: Checkout repo
       uses: actions/checkout@v4
 
