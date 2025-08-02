@@ -36,7 +36,7 @@ jobs:
       run: |
         echo "credentials_json_b64=$(base64 ${{ steps.auth.outputs.credentials_file_path }} | tr -d '\n')" >> $GITHUB_OUTPUT
 
-  terraform-jb
+  terraform-jb:
     needs: auth-jb
     runs-on: ubuntu-latest
     steps:
