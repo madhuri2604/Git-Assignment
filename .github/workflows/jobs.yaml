@@ -3,6 +3,7 @@ env:
   RESOURCE_NAME: "gcs"
   REGION:  "usc1"
   TERRAFORM_VERSION: "1.8.5"   
+  PROJECT_ID: "prj-gcp-inframod-01" 
 on:
   push:
     branches: [main]
@@ -50,6 +51,15 @@ jobs:
 
       - name: Verify credentials
         run: cat $HOME/adc.json | jq .
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: List all GCS buckets
+        run: gcloud storage buckets list 
+
 
     # - name: Setup Terraform
     #   uses: hashicorp/setup-terraform@v3
