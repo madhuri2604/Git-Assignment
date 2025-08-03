@@ -49,7 +49,7 @@ jobs:
       run: |
         terraform init -backend-config=${{ github.workspace }}/Modules/${RESOURCE_NAME}/config/backend/${REGION}/backend.auto.tfvars
       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
-
+ 
     - name: Terraform Plan
       run: |
         terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE_NAME}/${REGION}/terraform.tfvars -out=tfplan
