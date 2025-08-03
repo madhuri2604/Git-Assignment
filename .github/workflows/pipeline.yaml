@@ -1,61 +1,61 @@
-name: GCP WIF + Terraform GCS Pipeline
-env:
-  RESOURCE_NAME: "gcs"
-  REGION:  "usc1"
-  TERRAFORM_VERSION: "1.8.5"   
-on:
-  push:
-    branches: [main]
+# name: GCP WIF + Terraform GCS Pipeline
+# env:
+#   RESOURCE_NAME: "gcs"
+#   REGION:  "usc1"
+#   TERRAFORM_VERSION: "1.8.5"   
+# on:
+#   push:
+#     branches: [main]
 
-jobs:
-  gcs-bucket-workflow:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
+# jobs:
+#   gcs-bucket-workflow:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       id-token: write
 
-    env: 
-      PROJECT_ID: "prj-gcp-inframod-01" 
-      TF_VAR_project_id: "prj-gcp-inframod-01"
+#     env: 
+#       PROJECT_ID: "prj-gcp-inframod-01" 
+#       TF_VAR_project_id: "prj-gcp-inframod-01"
 
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout repo
+#       uses: actions/checkout@v4
 
-    - name: Authenticate to GCP via WIF
-      id: auth 
-      uses: google-github-actions/auth@v2
-      with:
-        create_credentials_file : true
-        workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
-        # workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/access-dev-infra-pool01/providers/oidc-github-provider01'
-        service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com' 
-        # service_account: 'gcp-dev-svc-wif-access01@prj-gcp-inframod-01.iam.gserviceaccount.com'
+#     - name: Authenticate to GCP via WIF
+#       id: auth 
+#       uses: google-github-actions/auth@v2
+#       with:
+#         create_credentials_file : true
+#         workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
+#         # workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/access-dev-infra-pool01/providers/oidc-github-provider01'
+#         service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com' 
+#         # service_account: 'gcp-dev-svc-wif-access01@prj-gcp-inframod-01.iam.gserviceaccount.com'
 
-    # - name: Setup gcloud
-    #   uses: google-github-actions/setup-gcloud@v2
-    #   with:
-    #     project_id: ${{ env.PROJECT_ID }}
+#     # - name: Setup gcloud
+#     #   uses: google-github-actions/setup-gcloud@v2
+#     #   with:
+#     #     project_id: ${{ env.PROJECT_ID }}
 
-    # - name: List all GCS buckets
-    #   run: gcloud storage buckets list 
+#     # - name: List all GCS buckets
+#     #   run: gcloud storage buckets list 
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version:  ${{env.TERRAFORM_VERSION}}
+#     - name: Setup Terraform
+#       uses: hashicorp/setup-terraform@v3
+#       with:
+#         terraform_version:  ${{env.TERRAFORM_VERSION}}
 
-    - name: Terraform Init
-      run: |
-        terraform init -backend-config=${{ github.workspace }}/Modules/${RESOURCE_NAME}/config/backend/${REGION}/backend.auto.tfvars
-      working-directory: Modules/${{ env.RESOURCE_NAME }}/config
+#     - name: Terraform Init
+#       run: |
+#         terraform init -backend-config=${{ github.workspace }}/Modules/${RESOURCE_NAME}/config/backend/${REGION}/backend.auto.tfvars
+#       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
 
-    - name: Terraform Plan
-      run: |
-        terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE_NAME}/${REGION}/terraform.tfvars -out=tfplan
-      working-directory: Modules/${{ env.RESOURCE_NAME }}/config
+#     - name: Terraform Plan
+#       run: |
+#         terraform plan -var-file=${{ github.workspace }}/Modules/${RESOURCE_NAME}/${REGION}/terraform.tfvars -out=tfplan
+#       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
 
-    - name: Terraform Apply
-      run: |
-        terraform apply -auto-approve tfplan
-      working-directory: Modules/${{ env.RESOURCE_NAME }}/config
+#     - name: Terraform Apply
+#       run: |
+#         terraform apply -auto-approve tfplan
+#       working-directory: Modules/${{ env.RESOURCE_NAME }}/config
