@@ -1,28 +1,28 @@
-name: Main Terraform WIF Workflow
+# name: Main Terraform WIF Workflow
 
-# on:
-#   push:
-#     branches: [main]
+# # on:
+# #   push:
+# #     branches: [main]
 
-jobs:
+# jobs:
 
-  auth:
-    uses: ./.github/workflows/auth.yaml
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
-      service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
-      project_id: 'prj-gcp-inframod-01'
+#   auth:
+#     uses: ./.github/workflows/auth.yaml
+#     permissions:
+#       id-token: write
+#       contents: read
+#     with:
+#       workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
+#       service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
+#       project_id: 'prj-gcp-inframod-01'
 
-  terraform:
-    needs: auth
-    uses: ./.github/workflows/terraform.yaml
-    with:
-      resource_name: 'gcs'
-      region: 'usc1'
-      terraform_version: '1.8.5'
-      credentials_json_b64: ${{ needs.auth.outputs.credentials_file }}
-    secrets: inherit
+#   terraform:
+#     needs: auth
+#     uses: ./.github/workflows/terraform.yaml
+#     with:
+#       resource_name: 'gcs'
+#       region: 'usc1'
+#       terraform_version: '1.8.5'
+#       credentials_json_b64: ${{ needs.auth.outputs.credentials_file }}
+#     secrets: inherit
 
