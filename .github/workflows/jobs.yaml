@@ -36,29 +36,29 @@ jobs:
   terraform-jb:
     needs: auth-jb
     runs-on: ubuntu-latest
-    steps:
-    
-      - name: Echo base64 value
-        run: echo "${{ needs.auth-jb.outputs.credentials_json_b64 }}"
+    permissions:
+      contents: read
+      id-token: write
 
+    steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Decode credentials
-        run: |
-          echo "${{ needs.auth-jb.outputs.credentials_json_b64 }}" | base64 -d > "$HOME/adc.json"
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/adc.json" >> $GITHUB_ENV
-
-      - name: Verify credentials
-        run: cat $HOME/adc.json | jq .
+      - name: Authenticate to GCP using passed credentials
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ needs.auth-jb.outputs.credentials_json_b64 }}
+          create_credentials_file: true
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.PROJECT_ID }}
 
-      - name: List all GCS buckets
-        run: gcloud storage buckets list 
+      - name: Verify authentication
+        run: gcloud auth list
+
+      - name: List buckets
+        run: gcloud storage buckets list
+
 
 
     # - name: Setup Terraform
