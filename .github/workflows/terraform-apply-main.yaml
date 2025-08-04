@@ -24,7 +24,7 @@ on:
         type: string
 
 jobs:
-  terraform-apply:
+  Deployment:
     runs-on: ubuntu-latest
     steps:
 
