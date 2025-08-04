@@ -1,8 +1,8 @@
 name: Main Terraform WIF Workflow
 
 on:
-  push:
-    branches: [main]
+
+  pull_request:
     paths:
       - 'Modules/gcs/usc1/**'
 
