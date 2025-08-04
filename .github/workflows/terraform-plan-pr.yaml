@@ -24,7 +24,7 @@ on:
         type: string
 
 jobs:
-  auth:
+  BuildValidation:
     runs-on: ubuntu-latest
     steps:
 

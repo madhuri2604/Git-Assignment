@@ -1,1 +1,1 @@
-bucket_name = "gcs-bucket-github-demo-wiley"
+bucket_name = "gcs-bucket-github-wiley"
