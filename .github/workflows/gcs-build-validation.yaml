@@ -9,6 +9,9 @@ on:
 jobs:
   ValidateOnPROpen:
     uses: ./.github/workflows/terraform-plan-pr.yaml
+    permissions:
+      id-token: write
+      contents: read
     with:
       workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
       service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
