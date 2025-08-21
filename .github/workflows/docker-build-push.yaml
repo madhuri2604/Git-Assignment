@@ -1,0 +1,46 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches:
+      - main 
+    paths:
+      - 'Dockerfile'
+      - 'app/**'
+      - '.github/workflows/*.yaml' 
+
+env:
+  PROJECT_ID: prj-gcp-inframod-01
+  GCP_REGION: us-central1         
+  ARTIFACT_REGISTRY_REPO: demo-app 
+  IMAGE_NAME: my-app-image      
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write' 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/349782046408/locations/global/workloadIdentityPools/github-demo-pool/providers/github-identity-provider'
+          service_account: 'sa-workload-identity-fed@prj-gcp-inframod-01.iam.gserviceaccount.com'
+
+      - name: Configure Docker to use Google Cloud Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE="${GCP_REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY_REPO}/${IMAGE_NAME}"
+          TAG="${GITHUB_SHA}"
+          echo "Building image: $IMAGE:$TAG"
+          docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" ./app
+          docker push "$IMAGE:$TAG"
+          docker push "$IMAGE:latest"

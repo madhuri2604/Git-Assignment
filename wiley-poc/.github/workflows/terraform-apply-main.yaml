@@ -1,0 +1,60 @@
+name: Deploy Terraform Configuration
+
+on:
+  workflow_call:
+    inputs:
+      workload_identity_provider:
+        required: true
+        type: string
+      service_account:
+        required: true
+        type: string
+      project_id:
+        required: true
+        type: string
+      resource_name:
+        required: true
+        type: string
+      region:
+        required: true
+        type: string
+      terraform_version:
+        required: false
+        default: "1.8.5"
+        type: string
+
+jobs:
+  Deployment:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Authenticate via WIF
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          create_credentials_file: true
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+          token_format: 'access_token'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Init
+        run: |
+          terraform init -backend-config=${{ github.workspace }}/Modules/${{ inputs.resource_name }}/config/backend/${{ inputs.region }}/backend.auto.tfvars
+        working-directory: Modules/${{ inputs.resource_name }}/config
+
+      - name: Terraform Plan
+        run: |
+          terraform plan -var-file=${{ github.workspace }}/Modules/${{ inputs.resource_name }}/${{ inputs.region }}/terraform.tfvars -out=tfplan
+        working-directory: Modules/${{ inputs.resource_name }}/config
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: Modules/${{ inputs.resource_name }}/config
