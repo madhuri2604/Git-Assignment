@@ -17,7 +17,7 @@ env:
 jobs:
   build-and-push:
     env:
-      FULL_IMAGE_PATH: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}
+      FULL_IMAGE_PATH: $GCP_REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO/$IMAGE_NAME
       IMAGE_TAG: ${{ github.sha }} 
 
     runs-on: ubuntu-latest
