@@ -6,7 +6,6 @@ on:
       - feature/development 
     paths:
       - 'app/**'
-      - '.github/workflows/*.yaml' 
 
 env:
   PROJECT_ID: prj-gcp-inframod-01
