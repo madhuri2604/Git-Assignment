@@ -1,6 +1,9 @@
 name: Terraform Dispatcher
 
 on:
+  push:
+    branches:
+      - feature/development 
   pull_request:
     paths:
       - 'Modules/**'
