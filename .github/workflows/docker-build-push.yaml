@@ -5,7 +5,6 @@ on:
     branches:
       - feature/development 
     paths:
-      - 'Dockerfile'
       - 'app/**'
       - '.github/workflows/*.yaml' 
 
@@ -17,7 +16,12 @@ env:
 
 jobs:
   build-and-push:
+    env:
+      FULL_IMAGE_PATH: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}
+      IMAGE_TAG: ${{ github.sha }} 
+
     runs-on: ubuntu-latest
+
     permissions:
       contents: 'read'
       id-token: 'write' 
@@ -36,11 +40,22 @@ jobs:
       - name: Configure Docker to use Google Cloud Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
-      - name: Build and Push Docker Image
+      # - name: Build and Push Docker Image
+      #   run: |
+      #     IMAGE="${GCP_REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY_REPO}/${IMAGE_NAME}"
+      #     TAG="${GITHUB_SHA}"
+      #     echo "Building image: $IMAGE:$TAG"
+      #     docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" ./app
+      #     docker push "$IMAGE:$TAG"
+      #     docker push "$IMAGE:latest"
+
+      - name: Build Docker Image
         run: |
-          IMAGE="${GCP_REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY_REPO}/${IMAGE_NAME}"
-          TAG="${GITHUB_SHA}"
-          echo "Building image: $IMAGE:$TAG"
-          docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" ./app
-          docker push "$IMAGE:$TAG"
-          docker push "$IMAGE:latest"
+          echo "Building image: ${{ env.FULL_IMAGE_PATH }}:${{ env.IMAGE_TAG }}"
+          docker build -t "${{ env.FULL_IMAGE_PATH }}:${{ env.IMAGE_TAG }}" ./app
+
+      - name: Push Docker Image to Artifact Registry
+        run: |
+          echo "Pushing image: ${{ env.FULL_IMAGE_PATH }}:${{ env.IMAGE_TAG }}"
+          docker push "${{ env.FULL_IMAGE_PATH }}:${{ env.IMAGE_TAG }}"
+
